@@ -3,11 +3,11 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-class DataGet {
-  public async home(req: Request, res: Response) {
+class ControllerGet {
+  public async get(req: Request, res: Response) {
     const user = await prisma.user.findMany();
     return res.json(user);
   }
 }
 
-export const dataGet = new DataGet();
+export const controllerGet = new ControllerGet();

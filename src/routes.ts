@@ -1,7 +1,8 @@
-import { Router, Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-import { dataGet } from "./Controller/controllerGet";
+import { Router } from "express";
+import { controllerGet } from "./Controller/controllerGet";
 import { controllerPost } from "./Controller/controllerPost";
+import { controllerDelete } from "./Controller/controllerDelete";
+import { controllerPatch } from "./Controller/controllerPatch";
 
 export interface CreateBody {
   name: string;
@@ -9,42 +10,14 @@ export interface CreateBody {
   age: number;
 }
 
-const prisma = new PrismaClient();
-
 const router: Router = Router();
 
-router.get("/", dataGet.home);
+router.get("/", controllerGet.get);
 
 router.post("/user", controllerPost.post);
 
-router.delete("/delete/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
+router.delete("/delete/:id", controllerDelete.delete);
 
-  await prisma.user.delete({
-    where: {
-      id: id,
-    },
-  });
-
-  res.json({ message: "Usuário deletado com sucesso" });
-});
-
-router.patch("/update/:id", async (req: Request, res: Response) => {
-  let body = req.body;
-  const id = Number(req.params.id);
-
-  await prisma.user.update({
-    where: {
-      id: id,
-    },
-
-    data: {
-      name: body.name.toLowerCase(),
-      email: body.email.toLowerCase(),
-      age: body.age,
-    },
-  });
-  res.json({ message: "Usuário atualizado com sucesso!" });
-});
+router.patch("/update/:id", controllerPatch.patch);
 
 export { router };
